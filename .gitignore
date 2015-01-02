@@ -42,3 +42,11 @@ Network Trash Folder
 Temporary Items
 .apdisk
 *.opensdf
+*.obj
+*.tlog
+*.log
+*.unsuccessfulbuild
+*.lastbuildstate
+*.idb
+*.pdb
+*.ipch
