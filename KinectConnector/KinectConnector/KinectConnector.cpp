@@ -464,9 +464,10 @@ void KinectConnector::ProcessSkel(SkeletonInfo* m_SkeletonInfo, int nBodyCount, 
 							m_SkeletonInfo->InfoBody[SkeletonCount].JointPos[j] = joints[j];
 							jointPoints[j] = BodyToScreen(joints[j].Position, mode);
 							//m_SkeletonInfo->InfoBody[SkeletonCount].jointPoints[j] = jointPoints[j];
-
-							//m_SkeletonInfo->InfoBody[SkeletonCount-1].jointPoints[j] = jointPoints[j];
 						}
+						m_SkeletonInfo->InfoBody[SkeletonCount].upperbodylen = EuclideanDist(jointPoints[JointType_ShoulderLeft], jointPoints[JointType_ShoulderRight]);
+						m_SkeletonInfo->InfoBody[SkeletonCount].lowerbodylen = EuclideanDist(jointPoints[JointType_HipLeft], jointPoints[JointType_HipRight]);
+
 						SkeletonCount++;
 						DrawSkelToMat(src, jointPoints, joints, mode, t_ID);
 					}
@@ -693,4 +694,8 @@ void KinectConnector::BasisCalibration(SkeletonInfo* m_SkeletonInfo){
 			m_SkeletonInfo->InfoBody[i].JointPos[j] = tempJoint;	
 		}
 	}
+}
+
+float KinectConnector::EuclideanDist(Point2d src1, Point2d src2){
+	return sqrt(pow(src1.x - src2.x,2) + pow(src1.y - src2.y,2));
 }

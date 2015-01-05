@@ -32,6 +32,9 @@ typedef struct BodyInfo{
 	//cv::Point2d jointPoints[JointType_Count];
 	UINT64 BodyID;
 	faceinfo Face;
+	float upperbodylen;
+	float lowerbodylen;
+	float spinedepth;
 }BodyInfo;
 
 typedef struct synconizedSkeletons{

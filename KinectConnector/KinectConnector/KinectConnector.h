@@ -84,6 +84,9 @@ private:
 	//Change CameraSpace coordinate to DepthCoordinate / ColorCoorinate.
 	Point2d BodyToScreen(const CameraSpacePoint& bodyPoint, int mode);
 
+	//Calculate euclidean dist ( cv::point2d );
+	float EuclideanDist(Point2d src1, Point2d src2);
+
 	//Rotate Basis
 	void BasisCalibration(SkeletonInfo* m_SkeletonInfo);
 
