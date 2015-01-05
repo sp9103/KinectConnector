@@ -15,7 +15,8 @@ public:
 	~KinectConnector(void);
 
 	//Kinect Initialize
-	HRESULT KinectInitialize();
+	//set KinectSource_Color bit or
+	HRESULT KinectInitialize(char enabledFrameSourceTypes);
 
 	//Get Color Opencv Image. (1920*1080)
 	//Image must allocated.(size: 1920*1080, CV_8UC4)
@@ -30,6 +31,9 @@ public:
 	//if mode = 1, Draw DepthScale. so src = DepthImage
 	//else if mode = 2, Draw ColorScale. so src = ColorImage.
 	void GetSkeletonPos(SkeletonInfo *m_SkeletonInfo, Mat *src, int mode);
+
+	//Get Face Information & draw Face (RGBD Space)
+	void FaceDetection(SkeletonInfo *m_SkeletonInfo, Mat *src);
 
 	//Kinect sensor close.
 	void KinectDestroy();
@@ -53,7 +57,15 @@ private:
 
 	RGBQUAD*				m_pColorRGBX;
 	RGBQUAD*				m_pDepthRGBX;
+	IBody*					ppBodies[BODY_COUNT];
 
+	// HD Face Sources
+	IHighDefinitionFaceFrameSource* m_pHDFaceFrameSources[BODY_COUNT];
+
+	// HDFace readers
+	IHighDefinitionFaceFrameReader*	m_pHDFaceFrameReaders[BODY_COUNT];
+
+	bool bHaveBodyData;
 	int MapDepthToByte;
 	int SkeletonCount;
 	WCHAR UniqueID[256];
@@ -64,6 +76,9 @@ private:
 
 	void DrawSkelToMat(Mat *src, Point2d *JointPoints, Joint* pJoints, int mode, int t_id);
 	void DrawSkelBone(Mat *src, Joint* pJoints, Point2d* pJointPoints, JointType joint0, JointType joint1, Scalar t_Color);
+	void DrawFaceinfo(Mat *src, int iFace, const RectI* pFaceBox, const PointF* pFacePoints, const Vector4* pFaceRotation, const DetectionResult* pFaceProperties, const CameraSpacePoint* pHeadPivot, const float* pAnimUnits);
+	bool ValidateFaceBoxAndPoints(const RectI* pFaceBox, const PointF* pFacePoints);
+	void ExtractFaceRotationInDegrees(const Vector4* pQuaternion, int* pPitch, int* pYaw, int* pRoll);
 
 	//Draw Hand state. - but not implemented.
 	void DrawHand(Mat *src, HandState handState, Point2d& handposition);

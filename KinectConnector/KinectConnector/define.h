@@ -1,5 +1,6 @@
 #pragma once
 #include "Kinect.h"
+#include "Kinect.Face.h"
 #include <opencv.hpp>
 #include <vector>
 
@@ -14,6 +15,7 @@
 
 
 #define SWAP(a,b,t) ((t)=(a), (a)=(b), (b)=(t))
+
 //Single Body Structure;
 typedef struct BodyInfo{
 	Joint JointPos[JointType_Count];
@@ -31,7 +33,7 @@ typedef struct synconizedSkeletons{
 
 
 typedef struct synconizedSkeletonsAll{
-	
+
 	SYSTEMTIME	st;
 	int numObservedBody;
 	bool bObsevedBody[BODY_COUNT];
@@ -57,3 +59,13 @@ inline void SafeRelease(Interface *& pInterfaceToRelease)
 		pInterfaceToRelease = NULL;
 	}
 }
+
+typedef enum _KinectSource KinectSource;
+
+enum _KinectSource
+{
+	KinectSource_Color	= 0x1,
+	KinectSource_Depth	= 0x2,
+	KinectSource_Body	= 0x4,
+	KinectSource_Face	= 0xC
+} ;

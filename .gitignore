@@ -50,3 +50,12 @@ Temporary Items
 *.idb
 *.pdb
 *.ipch
+*.dll
+*.xml
+*.model
+*.bin
+*.txt
+*.wgh
+*.config
+*.pra
+*.ply

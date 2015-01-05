@@ -9,13 +9,13 @@ int main(){
 	glBodyRenderer renderer;
 
 	renderer.InitializeRenderer(KINECT_COUNT, "Body");
+	kinect.KinectInitialize(KinectSource_Color | KinectSource_Depth| KinectSource_Body | KinectSource_Face);
 
 	while(1){
 
 		if(waitKey(OPENCV_WAIT_DELAY) == 27)	break;
 	}
 
-	kinect.KinectDestroy();
 	renderer.DeInitializeRenderer();
 
 	return 0;
