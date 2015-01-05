@@ -29,7 +29,7 @@ public:
 	//Get Body joint position. (joint count : 25)
 	//and Draw Opencv Image.
 	//if mode = 1, Draw DepthScale. so src = DepthImage
-	//else if mode = 2, Draw ColorScale. so src = ColorImage.
+	//else if mode = 0, Draw ColorScale. so src = ColorImage.
 	void GetSkeletonPos(SkeletonInfo *m_SkeletonInfo, Mat *src, int mode);
 
 	//Get Face Information & draw Face (RGBD Space)
