@@ -474,8 +474,12 @@ void KinectConnector::ProcessSkel(SkeletonInfo* m_SkeletonInfo, int nBodyCount, 
 							jointPoints[j] = BodyToScreen(joints[j].Position, mode);
 							//m_SkeletonInfo->InfoBody[SkeletonCount].jointPoints[j] = jointPoints[j];
 						}
+
+						//상하체 길이 return
 						m_SkeletonInfo->InfoBody[SkeletonCount].upperbodylen = EuclideanDist(jointPoints[JointType_ShoulderLeft], jointPoints[JointType_ShoulderRight]);
 						m_SkeletonInfo->InfoBody[SkeletonCount].lowerbodylen = EuclideanDist(jointPoints[JointType_HipLeft], jointPoints[JointType_HipRight]);
+						m_SkeletonInfo->InfoBody[SkeletonCount].spinedepth = (joints[JointType_SpineBase].Position.Z + joints[JointType_SpineMid].Position.Z + joints[JointType_SpineShoulder].Position.Z) / 3.0f;
+						printf("m_SkeletonInfo->InfoBody[SkeletonCount].spinedepth : %f\n", m_SkeletonInfo->InfoBody[SkeletonCount].spinedepth);
 
 						SkeletonCount++;
 						DrawSkelToMat(src, jointPoints, joints, mode, t_ID);
