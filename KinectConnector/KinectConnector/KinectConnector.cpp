@@ -463,7 +463,7 @@ void KinectConnector::ProcessSkel(SkeletonInfo* m_SkeletonInfo, int nBodyCount, 
 						for(int j = 0; j < _countof(joints); j++){
 							m_SkeletonInfo->InfoBody[SkeletonCount].JointPos[j] = joints[j];
 							jointPoints[j] = BodyToScreen(joints[j].Position, mode);
-							m_SkeletonInfo->InfoBody[SkeletonCount].jointPoints[j] = jointPoints[j];
+							//m_SkeletonInfo->InfoBody[SkeletonCount].jointPoints[j] = jointPoints[j];
 
 							//m_SkeletonInfo->InfoBody[SkeletonCount-1].jointPoints[j] = jointPoints[j];
 						}
@@ -609,12 +609,6 @@ void KinectConnector::FaceDetection(SkeletonInfo *m_SkeletonInfo, cv::Mat *src){
 
 			pFaceAlignment->GetAnimationUnits(FaceShapeAnimations_Count, pAnimationUnits);
 
-			/*float* pDeformations = new float[FaceShapeDeformations_Count];
-			IFaceModel * pFaceModel = nullptr;
-			CreateFaceModel(1.0, FaceShapeDeformations_Count, pDeformations, &pFaceModel);
-
-			pFaceModel->GetFaceShapeDeformations(FaceShapeDeformations_Count, pDeformations);*/
-
 			RectI faceBox = {0};
 
 			//HighDetailFacePoints::
@@ -636,24 +630,10 @@ void KinectConnector::FaceDetection(SkeletonInfo *m_SkeletonInfo, cv::Mat *src){
 			FaceAlignmentQuality faceQuality;
 			pFaceAlignment->get_Quality(&faceQuality);
 
-			//if (FaceAlignmentQuality::FaceAlignmentQuality_High == faceQuality)
-			//{
-			//	printf("Face Quality: HIGH\n");
-			//}
-			//else if (FaceAlignmentQuality::FaceAlignmentQuality_Low == faceQuality)
-			//{
-			//	printf("Face Quality: LOW\n");
-			//}
-			//else
-			//{
-			//	printf("Face Quality: %d\n", faceQuality);
-			//}
-
 			DetectionResult faceProperties[FaceProperty::FaceProperty_Count];
 
 			DrawFaceinfo(src, i, &faceBox, facePoints, &faceRotation, faceProperties, &headPivot, pAnimationUnits);
 
-			//delete [] pDeformations;
 			delete [] pAnimationUnits;
 		}
 		else {
