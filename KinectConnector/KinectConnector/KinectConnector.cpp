@@ -16,7 +16,16 @@ KinectConnector::KinectConnector(void)
 		m_pHDFaceFrameReaders[i] = nullptr;
 	}
 
-	RTMat.eye(4,4, CV_32FC1);
+	//Identity Matrix
+	RTMat.create(4,4, CV_32FC1);
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 4; j++){
+			if(i == j )
+				RTMat.at<float>(i,j) = 1.0f;
+			else
+				RTMat.at<float>(i,j) = 0.0f;
+		}
+	}
 }
 
 KinectConnector::~KinectConnector(void)
