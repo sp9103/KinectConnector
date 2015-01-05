@@ -59,3 +59,5 @@ Temporary Items
 *.config
 *.pra
 *.ply
+*.exe
+*.ilk

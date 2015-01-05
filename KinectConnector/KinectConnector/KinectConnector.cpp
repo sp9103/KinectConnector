@@ -10,13 +10,14 @@ KinectConnector::KinectConnector(void)
 
 	MapDepthToByte = 8000 / 256;
 
-	//for (int i = 0; i < BODY_COUNT; i++)
-	//{
-	//	m_pHDFaceFrameSources[i] = nullptr;
-	//	m_pHDFaceFrameReaders[i] = nullptr;
-	//}
-}
+	for (int i = 0; i < BODY_COUNT; i++)
+	{
+		m_pHDFaceFrameSources[i] = nullptr;
+		m_pHDFaceFrameReaders[i] = nullptr;
+	}
 
+	RTMat.eye(4,4, CV_32FC1);
+}
 
 KinectConnector::~KinectConnector(void)
 {
@@ -32,9 +33,7 @@ KinectConnector::~KinectConnector(void)
 	SafeRelease(m_pBodyFrameReader);
 	SafeRelease(m_pCoordinateMapper);
 
-	Kmat.release();
-	Rmat.release();
-	Tmat.release();
+	RTMat.release();
 
 	for(int i = 0; i < _countof(ppBodies); i++){
 		SafeRelease(ppBodies[i]);
@@ -141,36 +140,6 @@ HRESULT KinectConnector::KinectInitialize(char enabledFrameSourceTypes){
 						//             hr = m_pFaceFrameSources[i]->OpenReader(&m_pFaceFrameReaders[i]);
 						hr = m_pHDFaceFrameSources[i]->OpenReader(&m_pHDFaceFrameReaders[i]);
 					}
-
-					/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					//// Open Face Model Builder
-					//hr = m_pHDFaceFrameSources[i]->OpenModelBuilder( FaceModelBuilderAttributes::FaceModelBuilderAttributes_None, &pFaceModelBuilder[i] );
-					//if( FAILED( hr ) ){
-					//	std::cerr << "Error : IHighDefinitionFaceFrameSource::OpenModelBuilder()" << std::endl;
-					//	return -1;
-					//}
-
-					//// Start Collection Face Data
-					//hr = pFaceModelBuilder[i]->BeginFaceDataCollection();
-					//if( FAILED( hr ) ){
-					//	std::cerr << "Error : IFaceModelBuilder::BeginFaceDataCollection()" << std::endl;
-					//	return -1;
-					//}
-
-					//// Create Face Alignment
-					//hr = CreateFaceAlignment( &pFaceAlignment[i] );
-					//if( FAILED( hr ) ){
-					//	std::cerr << "Error : CreateFaceAlignment()" << std::endl;
-					//	return -1;
-					//}
-
-					//// Create Face Model
-					//hr = CreateFaceModel( 1.0f, FaceShapeDeformations::FaceShapeDeformations_Count, &deformations[i][0], &pFaceModel[i] );
-					//if( FAILED( hr ) ){
-					//	std::cerr << "Error : CreateFaceModel()" << std::endl;
-					//	return -1;
-					//}
-					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 				}
 			}
 			printf("Face Stream open complete\n");
@@ -364,7 +333,7 @@ void KinectConnector::GetSkeletonPos(SkeletonInfo* m_SkeletonInfo, Mat *src, int
 			bHaveBodyData = true;
 			ProcessSkel(m_SkeletonInfo, BODY_COUNT, ppBodies, src, mode);	
 			////process & draw body
-			//BasisCalibration(m_SkeletonInfo);		
+			BasisCalibration(m_SkeletonInfo);		
 		}
 	}
 
@@ -713,6 +682,35 @@ void KinectConnector::FaceDetection(SkeletonInfo *m_SkeletonInfo, cv::Mat *src){
 					}
 				}
 			}
+		}
+	}
+}
+
+void KinectConnector::BasisCalibration(SkeletonInfo* m_SkeletonInfo){
+	BodyInfo tempBody;
+
+	Mat camData;
+	camData.create(4,1, CV_32FC1);
+
+	for(int i = 0; i < m_SkeletonInfo->Count; i++){
+		tempBody = m_SkeletonInfo->InfoBody[i];
+
+		//Calibration - 각 조인트에 대해서
+		for(int j = 0; j < JointType_Count; j++){
+			Joint tempJoint = tempBody.JointPos[j];
+
+			camData.at<float>(0,0) = tempJoint.Position.X;
+			camData.at<float>(1,0) = tempJoint.Position.Y;
+			camData.at<float>(2,0) = tempJoint.Position.Z;
+			camData.at<float>(3,0) = 1.0f;
+
+			camData = RTMat * camData;
+
+			tempJoint.Position.X = camData.at<float>(0,0);
+			tempJoint.Position.Y = camData.at<float>(1,0);
+			tempJoint.Position.Z = camData.at<float>(2,0);
+
+			m_SkeletonInfo->InfoBody[i].JointPos[j] = tempJoint;	
 		}
 	}
 }

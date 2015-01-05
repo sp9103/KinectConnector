@@ -41,8 +41,6 @@ public:
 	//Return Kinect Unique ID
 	void GetKinectID(WCHAR *KinectID);
 
-	void BasisCalibration(SkeletonInfo* m_SkeletonInfo);
-
 	//Set intrinsic & extrinsic mat
 	void SetKmat(Mat src);
 	void SetRmat(Mat src);
@@ -86,10 +84,11 @@ private:
 	//Change CameraSpace coordinate to DepthCoordinate / ColorCoorinate.
 	Point2d BodyToScreen(const CameraSpacePoint& bodyPoint, int mode);
 
+	//Rotate Basis
+	void BasisCalibration(SkeletonInfo* m_SkeletonInfo);
+
 	//intrinsic & extrinsic mat
-	Mat Kmat;
-	Mat Rmat;
-	Mat Tmat;
+	Mat RTMat;
 
 	bool bDepth;
 	bool bColor;
