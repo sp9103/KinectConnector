@@ -18,6 +18,7 @@ int main(){
 	cv::namedWindow("DEPTH", CV_WINDOW_KEEPRATIO);
 
 	renderer.InitializeRenderer(KINECT_COUNT, "Body");
+	renderer.WaitUntilThreadInit();
 	kinect.KinectInitialize(KinectSource_Color | KinectSource_Depth| KinectSource_Body | KinectSource_Face);
 
 	while(1){
@@ -26,6 +27,8 @@ int main(){
 		kinect.GetSkeletonPos(&tBodystruct, &KinectRGB, 0);
 		kinect.FaceDetection(&tBodystruct, &KinectRGB);
 
+		renderer.SetBodyInfo(&tBodystruct);
+
 		imshow("RGB", KinectRGB);
 		imshow("DEPTH", KinectDepth);
 
@@ -33,6 +36,7 @@ int main(){
 	}
 
 	renderer.DeInitializeRenderer();
+	renderer.WaitUntilThreadDead();
 
 	//Image release
 	KinectRGB.release();
