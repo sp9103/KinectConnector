@@ -74,7 +74,7 @@ private:
 
 	void DrawSkelToMat(Mat *src, Point2d *JointPoints, Joint* pJoints, int mode, int t_id);
 	void DrawSkelBone(Mat *src, Joint* pJoints, Point2d* pJointPoints, JointType joint0, JointType joint1, Scalar t_Color);
-	void DrawFaceinfo(Mat *src, int iFace, const RectI* pFaceBox, const PointF* pFacePoints, const Vector4* pFaceRotation, const DetectionResult* pFaceProperties, const CameraSpacePoint* pHeadPivot, const float* pAnimUnits);
+	void DrawFaceinfo(Mat *src, int iFace, const RectI* pFaceBox, const PointF* pFacePoints, const Vector4* pFaceRotation, const DetectionResult* pFaceProperties, const CameraSpacePoint* pHeadPivot, faceinfo *faceinfo);
 	bool ValidateFaceBoxAndPoints(const RectI* pFaceBox, const PointF* pFacePoints);
 	void ExtractFaceRotationInDegrees(const Vector4* pQuaternion, int* pPitch, int* pYaw, int* pRoll);
 

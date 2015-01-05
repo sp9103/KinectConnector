@@ -479,7 +479,7 @@ void KinectConnector::ProcessSkel(SkeletonInfo* m_SkeletonInfo, int nBodyCount, 
 						m_SkeletonInfo->InfoBody[SkeletonCount].upperbodylen = EuclideanDist(jointPoints[JointType_ShoulderLeft], jointPoints[JointType_ShoulderRight]);
 						m_SkeletonInfo->InfoBody[SkeletonCount].lowerbodylen = EuclideanDist(jointPoints[JointType_HipLeft], jointPoints[JointType_HipRight]);
 						m_SkeletonInfo->InfoBody[SkeletonCount].spinedepth = (joints[JointType_SpineBase].Position.Z + joints[JointType_SpineMid].Position.Z + joints[JointType_SpineShoulder].Position.Z) / 3.0f;
-						printf("m_SkeletonInfo->InfoBody[SkeletonCount].spinedepth : %f\n", m_SkeletonInfo->InfoBody[SkeletonCount].spinedepth);
+						//printf("m_SkeletonInfo->InfoBody[SkeletonCount].spinedepth : %f\n", m_SkeletonInfo->InfoBody[SkeletonCount].spinedepth);
 
 						SkeletonCount++;
 						DrawSkelToMat(src, jointPoints, joints, mode, t_ID);
@@ -559,7 +559,7 @@ void KinectConnector::ExtractFaceRotationInDegrees(const Vector4* pQuaternion, i
     *pRoll = static_cast<int>((dRoll + increment/2.0 * (dRoll > 0 ? 1.0 : -1.0)) / increment) * static_cast<int>(increment);
 }
 
-void KinectConnector::DrawFaceinfo(Mat *src, int iFace, const RectI* pFaceBox, const PointF* pFacePoints, const Vector4* pFaceRotation, const DetectionResult* pFaceProperties, const CameraSpacePoint* pHeadPivot, const float* pAnimUnits){
+void KinectConnector::DrawFaceinfo(Mat *src, int iFace, const RectI* pFaceBox, const PointF* pFacePoints, const Vector4* pFaceRotation, const DetectionResult* pFaceProperties, const CameraSpacePoint* pHeadPivot, faceinfo *faceinfo){
 	if (ValidateFaceBoxAndPoints(pFaceBox, pFacePoints))
 	{
 		UINT64 tid;
@@ -592,6 +592,10 @@ void KinectConnector::DrawFaceinfo(Mat *src, int iFace, const RectI* pFaceBox, c
 		faceText = " FaceRoll : " + std::to_string( roll );
 		TextPoint.y += TextTerm;
 		cv::putText(*src, faceText, TextPoint, FONT_HERSHEY_PLAIN, 2.0, tColor, 3);
+		
+		faceinfo->pitch		= pitch;
+		faceinfo->yaw		= yaw;
+		faceinfo->roll		= roll;
 	}
 }
 
@@ -603,6 +607,7 @@ void KinectConnector::FaceDetection(SkeletonInfo *m_SkeletonInfo, cv::Mat *src){
 		IHighDefinitionFaceFrame * pHDFaceFrame = nullptr;
 		hr = m_pHDFaceFrameReaders[i]->AcquireLatestFrame(&pHDFaceFrame);
 
+		m_SkeletonInfo->InfoBody[i].Face.bDetect = false;
 		BOOLEAN bFaceTracked = false;
 
 		if ( SUCCEEDED(hr) )
@@ -615,6 +620,18 @@ void KinectConnector::FaceDetection(SkeletonInfo *m_SkeletonInfo, cv::Mat *src){
 
 		if (bFaceTracked)
 		{
+			//¸Â´Â body index find
+			int tbodyidx = -1;
+			UINT64 faceid = -1;
+			pHDFaceFrame->get_TrackingId(&faceid);
+
+			for(int j = 0; j < m_SkeletonInfo->Count; j++){
+				if(m_SkeletonInfo->InfoBody[j].BodyID == faceid){
+					tbodyidx = j;
+					break;
+				}
+			}
+
 			IFaceAlignment* pFaceAlignment = nullptr;
 			CreateFaceAlignment(&pFaceAlignment);
 			pHDFaceFrame->GetAndRefreshFaceAlignmentResult(pFaceAlignment);
@@ -646,7 +663,10 @@ void KinectConnector::FaceDetection(SkeletonInfo *m_SkeletonInfo, cv::Mat *src){
 
 			DetectionResult faceProperties[FaceProperty::FaceProperty_Count];
 
-			DrawFaceinfo(src, i, &faceBox, facePoints, &faceRotation, faceProperties, &headPivot, pAnimationUnits);
+			DrawFaceinfo(src, i, &faceBox, facePoints, &faceRotation, faceProperties, &headPivot, &m_SkeletonInfo->InfoBody[tbodyidx].Face);
+
+			m_SkeletonInfo->InfoBody[tbodyidx].Face.bDetect = true;
+			m_SkeletonInfo->InfoBody[tbodyidx].Face.Facepos = headPivot;
 
 			delete [] pAnimationUnits;
 		}
