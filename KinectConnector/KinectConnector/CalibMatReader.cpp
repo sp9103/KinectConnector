@@ -47,12 +47,19 @@ cv::Mat CalibMatReader::GetRTMat(char *filename, int ID){
 }
 
 bool CalibMatReader::FindID(FILE *fp, int ID){
-	bool tflag;
+	bool tflag = false;
 	char buf[16];
 
 	sprintf(buf, "[%d]\n", ID);
 
-	tflag = findstr(fp, buf);
+	while(1){
+
+
+		if(feof(fp))
+			break;
+	}
+
+	//tflag = findstr(fp, buf);
 
 	fseek(fp, 0, SEEK_SET);
 
@@ -62,7 +69,7 @@ bool CalibMatReader::FindID(FILE *fp, int ID){
 bool CalibMatReader::findstr(FILE *fp, char *str){
 	bool tflag = false;
 
-	if(str[0] == '\0')
+	if(str[0] == '\n')
 		return true;
 
 	while(1){
