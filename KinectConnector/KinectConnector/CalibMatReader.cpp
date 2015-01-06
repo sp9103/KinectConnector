@@ -89,3 +89,23 @@ bool CalibMatReader::findstr(FILE *fp, char *str){
 
 	return tflag;
 }
+
+void CalibMatReader::writeRTMat(char *filename, cv::Mat mat, int ID){
+	//read & copy
+	FILE *tfp = NULL;
+	int datacount = 0;
+	tfp = fopen(filename, "r");
+
+	if(tfp != NULL){
+		fscanf(tfp, "%d\n", &datacount);
+
+		for(int i = 0; i < datacount; i++){
+		}
+	}
+
+	fclose(tfp);
+
+	//rewrite
+	tfp = fopen(filename, "w");
+	fclose(tfp);
+}
