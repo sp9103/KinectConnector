@@ -90,22 +90,60 @@ bool CalibMatReader::findstr(FILE *fp, char *str){
 	return tflag;
 }
 
+bool compare(matarr &a, matarr &b){
+	return a.ID > b.ID;
+}
+
 void CalibMatReader::writeRTMat(char *filename, cv::Mat mat, int ID){
 	//read & copy
 	FILE *tfp = NULL;
 	int datacount = 0;
+	matarr temparr;
+
+	std::vector<matarr> matVec; 
+
 	tfp = fopen(filename, "r");
 
 	if(tfp != NULL){
 		fscanf(tfp, "%d\n", &datacount);
 
 		for(int i = 0; i < datacount; i++){
+
 		}
 	}
 
 	fclose(tfp);
 
-	//rewrite
+	//rewrite - 넣고 순서대로 정렬 (덮어쓰기)
+	int idx = -1;
+
+	for(int i = 0; i < matVec.size(); i++){
+		if(ID == matVec.at(i).ID){
+			matVec.erase(matVec.begin() + i);
+			break;
+		}
+	}
+
+	//새로 쓰기
+
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 4; j++){
+			temparr.element[i*4 + j] = mat.at<float>(i,j);
+		}
+	}
+	temparr.ID = ID;
+	matVec.push_back(temparr);
+	std::sort(matVec.begin(), matVec.end(), compare);
+
 	tfp = fopen(filename, "w");
+	fprintf(tfp, "%d\n", datacount++);
+	for(int i = 0; i < matVec.size(); i++){
+		fprintf(tfp, "[%d]\n", matVec.at(i).ID);
+		for(int j = 0; j < 16; j++){
+			fprintf(tfp, "%f ", matVec.at(i).element[j]);
+		}
+		fprintf(tfp, "\n");
+	}
+
 	fclose(tfp);
 }

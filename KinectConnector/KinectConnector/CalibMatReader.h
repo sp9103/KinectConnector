@@ -1,5 +1,11 @@
 #include "define.h"
 
+typedef struct _matarr
+{
+	int ID;
+	float element[16];
+}matarr;
+
 class CalibMatReader
 {
 public:
