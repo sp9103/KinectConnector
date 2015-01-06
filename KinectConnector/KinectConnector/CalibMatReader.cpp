@@ -38,7 +38,9 @@ cv::Mat CalibMatReader::GetRTMat(char *filename, int ID){
 	for(int i = 0; i < 4; i++){
 		for(int j = 0; j < 4; j++){
 			fscanf(tfp, "%f ", &m_Mat.at<float>(i,j));
+			printf("%f ", m_Mat.at<float>(i,j));
 		}
+		printf("\n");
 	}
 
 	fclose(tfp);
@@ -53,7 +55,15 @@ bool CalibMatReader::FindID(FILE *fp, int ID){
 	sprintf(buf, "[%d]\n", ID);
 
 	while(1){
+		char temp;
+		fscanf(fp, "%c", &temp);
 
+		if(temp == buf[0]){
+			tflag = findstr(fp, &buf[1]);
+
+			if(tflag)
+				return tflag;
+		}
 
 		if(feof(fp))
 			break;
@@ -72,16 +82,10 @@ bool CalibMatReader::findstr(FILE *fp, char *str){
 	if(str[0] == '\n')
 		return true;
 
-	while(1){
-		char temp;
-		fscanf(fp, "%c", &temp);
-		
-		if(temp == str[0])
-			tflag = findstr(fp, &str[1]);
-
-		if(feof(fp))
-			break;
-	}
+	char temp;
+	fscanf(fp, "%c", &temp);
+	if(temp == str[0])
+		tflag = findstr(fp, &str[1]);
 
 	return tflag;
 }

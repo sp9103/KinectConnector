@@ -1,10 +1,12 @@
 #include "define.h"
 #include "glBodyRenderer.h"
 #include "KinectConnector.h"
+#include "CalibMatReader.h"
 
 using namespace cv;
 
 int main(){
+	CalibMatReader matReader;
 	SkeletonInfo tBodystruct;
 	KinectConnector kinect;
 	glBodyRenderer renderer;
