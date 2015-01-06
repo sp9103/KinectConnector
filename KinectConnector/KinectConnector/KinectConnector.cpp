@@ -732,3 +732,7 @@ void KinectConnector::BasisCalibration(SkeletonInfo* m_SkeletonInfo){
 float KinectConnector::EuclideanDist(Point2d src1, Point2d src2){
 	return sqrt(pow(src1.x - src2.x,2) + pow(src1.y - src2.y,2));
 }
+
+void KinectConnector::SetRTmat(Mat src){
+	src.copyTo(RTMat);
+}

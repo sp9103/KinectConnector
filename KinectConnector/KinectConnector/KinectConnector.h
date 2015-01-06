@@ -42,9 +42,7 @@ public:
 	void GetKinectID(WCHAR *KinectID);
 
 	//Set intrinsic & extrinsic mat
-	void SetKmat(Mat src);
-	void SetRmat(Mat src);
-	void SetTmat(Mat src);
+	void SetRTmat(Mat src);
 
 private:
 	IKinectSensor*			m_pKinectSensor;

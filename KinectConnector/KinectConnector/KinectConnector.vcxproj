@@ -150,6 +150,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CalibMatReader.cpp" />
     <ClCompile Include="glBodyRenderer.cpp" />
     <ClCompile Include="KinectConnector.cpp" />
     <ClCompile Include="main.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="Thread.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CalibMatReader.h" />
     <ClInclude Include="glBodyRenderer.h" />
     <ClInclude Include="KinectConnector.h" />
     <ClInclude Include="Thread.h" />
