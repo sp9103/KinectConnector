@@ -13,5 +13,6 @@ private:
 	cv::Mat m_Mat;
 
 	bool FindID(FILE *fp, int ID);
+	bool findstr(FILE *fp, char* str);
 };
 
