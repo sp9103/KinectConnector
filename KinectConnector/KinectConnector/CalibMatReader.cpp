@@ -108,23 +108,27 @@ void CalibMatReader::writeRTMat(char *filename, cv::Mat mat, int ID){
 		fscanf(tfp, "%d\n", &datacount);
 
 		for(int i = 0; i < datacount; i++){
-
+			fscanf(tfp, "[%d]\n", &temparr.ID);
+			for(int j = 0; j < 16; j++){
+				fscanf(tfp, "%f ", &temparr.element[j]);
+			}
+			fscanf(tfp, "\n");
 		}
 	}
+	matVec.push_back(temparr);
 
 	fclose(tfp);
 
 	//rewrite - 넣고 순서대로 정렬 (덮어쓰기)
 	int idx = -1;
 
+	//기존 데이터 있으면 지우고 새로씀
 	for(int i = 0; i < matVec.size(); i++){
 		if(ID == matVec.at(i).ID){
 			matVec.erase(matVec.begin() + i);
 			break;
 		}
 	}
-
-	//새로 쓰기
 
 	for(int i = 0; i < 4; i++){
 		for(int j = 0; j < 4; j++){
