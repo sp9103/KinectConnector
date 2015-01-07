@@ -63,3 +63,5 @@ Temporary Items
 *.ilk
 *.vcxproj
 *.suo
+*.user
+BodyDataRecord/BodyDataRecord/BodyDataRecord.vcxproj.filters
