@@ -35,6 +35,7 @@ cv::Mat CalibMatReader::GetRTMat(char *filename, int ID){
 		return m_Mat;
 	}
 
+	printf("[%d] Kinect Trasformation matrix : \n", ID);
 	for(int i = 0; i < 4; i++){
 		for(int j = 0; j < 4; j++){
 			fscanf(tfp, "%f ", &m_Mat.at<float>(i,j));
