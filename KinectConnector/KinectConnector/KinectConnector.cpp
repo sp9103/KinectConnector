@@ -299,7 +299,6 @@ void KinectConnector::ConvertOpencvColorImage(cv::Mat *src, RGBQUAD* pBuffer, in
 void KinectConnector::ConvertOpencvGrayImage(cv::Mat *src, UINT16* pBuffer, int nHeight, int nWidth, int nMinDepth, int nMaxDepth){
 	src->setTo(Scalar::all(0));
 	if(m_pDepthRGBX && pBuffer){
-		//RGBQUAD* pRGBX = m_pDepthRGBX;
 
 		const UINT16* pBufferEnd = pBuffer + (nWidth * nHeight);
 
@@ -323,7 +322,6 @@ void KinectConnector::GetSkeletonPos(SkeletonInfo* m_SkeletonInfo, Mat *src, int
 
 	HRESULT hr = m_pBodyFrameReader->AcquireLatestFrame(&pBodyFrame);
 	bHaveBodyData = false;
-	//IBody* ppBodies[BODY_COUNT] = {0};
 
 	if(SUCCEEDED(hr)){
 		INT64 nTime = 0;
@@ -515,24 +513,6 @@ bool KinectConnector::ValidateFaceBoxAndPoints(const RectI* pFaceBox, const Poin
 			height > 0 && 
 			pFaceBox->Right <= screenWidth && 
 			pFaceBox->Bottom <= screenHeight;
-
-		//if (isFaceValid)
-		//{
-		//    for (int i = 0; i < FacePointType::FacePointType_Count; i++)
-		//    {
-		//        // check if we have a valid face point within the bounds of the screen space                        
-		//        bool isFacePointValid = pFacePoints[i].X > 0.0f &&
-		//            pFacePoints[i].Y > 0.0f &&
-		//            pFacePoints[i].X < m_sourceWidth &&
-		//            pFacePoints[i].Y < m_sourceHeight;
-
-		//        if (!isFacePointValid)
-		//        {
-		//            isFaceValid = false;
-		//            break;
-		//        }
-		//    }
-		//}
 	}
 
 	return isFaceValid;
@@ -601,7 +581,6 @@ void KinectConnector::DrawFaceinfo(Mat *src, int iFace, const RectI* pFaceBox, c
 
 void KinectConnector::FaceDetection(SkeletonInfo *m_SkeletonInfo, cv::Mat *src){
 	HRESULT hr;
-	//bool bHaveBodyData = SUCCEEDED( UpdateBodyData(ppBodies) );
 
 	for( int i = 0; i < BODY_COUNT; i++){
 		IHighDefinitionFaceFrame * pHDFaceFrame = nullptr;

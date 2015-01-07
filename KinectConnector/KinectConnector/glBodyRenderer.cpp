@@ -38,37 +38,6 @@ void glBodyRenderer::InitializeRenderer(int numKinect, char *name){
 	m_numKinect = numKinect;
 	//Shared variable initialze
 	for(int i = 0; i < m_numKinect; i++) m_BodyInfo[i].Count = -1;
-
-	/*//if( !glfwInit() )
-	//{
-	//	fprintf( stderr, "Failed to initialize GLFW\n" );
-	//	exit( EXIT_FAILURE );
-	//}
-
-	//glfwWindowHint(GLFW_DEPTH_BITS, 160);
-
-	//m_window = glfwCreateWindow( 640, 480, "Kinect Rendering", NULL, NULL );
-	//if (!m_window)
-	//{
-	//	fprintf( stderr, "Failed to open GLFW window\n" );
-	//	glfwTerminate();
-	//	exit( EXIT_FAILURE );
-	//}
-
-	//// Set callback functions
-
-	//glfwSetFramebufferSizeCallback(m_window, this->reshape);
-	//glfwSetKeyCallback(m_window, this->key);
-	//glfwSetScrollCallback(m_window, scroll_callback);
-
-	//glfwMakeContextCurrent(m_window);
-	//glfwSwapInterval( 1 );
-
-	//glfwGetFramebufferSize(m_window, &m_width, &m_height);
-	//reshape(m_window, m_width, m_height);
-
-	//// Parse command-line options
-	//init();*/
 }
 
 int glBodyRenderer::CheckWindowClose(){
@@ -145,9 +114,6 @@ void glBodyRenderer::reshape( GLFWwindow* window, int width, int height )
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
 	glFrustum( -xmax, xmax, -xmax*h, xmax*h, znear, zfar );
-	//glMatrixMode( GL_MODELVIEW );				//ModelView가 카메라
-	//glLoadIdentity();
-	//glTranslatef( 0.0, 0.0, -40.0 );			// 카메라 관련?
 }
 
 /*********************************************************************************
@@ -310,12 +276,9 @@ void glBodyRenderer::draw(SkeletonInfo *JointData, int numKinect)
 
 	glEnable(GL_LIGHTING);
 	glShadeModel(GL_SMOOTH);
-	////glShadeModel(GL_FLAT);
-	//drawSphere(1.0, 10, 10, green);
 
 	for(int i = 0; i < numKinect; i++){
 		for(int j = 0; j < JointData[i].Count; j++){
-			//printf("Joint count [%d] : %d\n", i, JointData[i].Count);
 			drawBody(JointData[i].InfoBody[j]);
 		}
 	}
@@ -365,29 +328,16 @@ void glBodyRenderer::DrawSkelBone(Joint* pJoints, cv::Point3f* pJointPoints, Joi
 void glBodyRenderer::drawBody(BodyInfo tBody){
 	UINT64 tBodyID = tBody.BodyID;
 	GLfloat tColor[4] = {(tBodyID*37)%256/255.f, (tBodyID*113)%256/255.f, (tBodyID*71)%256/255.f};
-	/*static const float sphereRad = .2;
-	static const float cylinderRad = .1;
-	static const int tSlice = 10;*/
 
-	/*drawSphere(2., 10, 10, tColor);*/
 	glPushMatrix();
 
-	/*GLUquadric *quadric;
-	quadric = gluNewQuadric();*/
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, tColor);
 
 	/////////////////////Draw Joint////////////////////////////////////
 	cv::Point3f gljointpoints[JointType_Count];
-	for(int i = 0; i < JointType_Count; i++){
+	for(int i = 0; i < JointType_Count; i++)
 		glTransformCoordinate(tBody.JointPos[i], &gljointpoints[i]);			//Transformation -> Image coordinate
-
-		//glPushMatrix();
-		//glTranslatef(gljointpoints[i].x, gljointpoints[i].y, gljointpoints[i].z);
-		////printf("%f %f %f\n", gljointpoints[i].x, gljointpoints[i].y, gljointpoints[i].z);
-		////printf("%f %f %f\n", tBody.JointPos[i].Position.X, tBody.JointPos[i].Position.Y, tBody.JointPos[i].Position.Z);
-		//gluSphere(quadric, sphereRad, tSlice, tSlice);
-		//glPopMatrix();
-	}
+	
 	// Torso
 	DrawSkelBone(tBody.JointPos, gljointpoints, JointType_Head, JointType_Neck, tColor);
 	DrawSkelBone(tBody.JointPos, gljointpoints, JointType_Neck, JointType_SpineShoulder, tColor);
@@ -458,8 +408,6 @@ UINT WINAPI glBodyRenderer::renderThread(LPVOID param){
 	//SkeletonInfo *threadBodyInfo;
 	SkeletonInfo threadBodyInfo[KINECT_COUNT];
 
-	//threadBodyInfo = (SkeletonInfo*)malloc(sizeof(SkeletonInfo)*t_glBodyRenderer->m_numKinect);
-
 	//Thread Initialize..
 	printf("Thread Initialize start...\n");
 	if( !glfwInit() )
@@ -505,8 +453,6 @@ UINT WINAPI glBodyRenderer::renderThread(LPVOID param){
 
 		t_glBodyRenderer->Display(threadBodyInfo, t_glBodyRenderer->m_numKinect);
 	}
-
-	//free(t_glBodyRenderer);
 
 	//Thread exit...
 	t_glBodyRenderer->m_EndThread = true;
