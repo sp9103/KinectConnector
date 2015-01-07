@@ -91,7 +91,7 @@ bool CalibMatReader::findstr(FILE *fp, char *str){
 }
 
 bool compare(matarr &a, matarr &b){
-	return a.ID > b.ID;
+	return a.ID < b.ID;
 }
 
 void CalibMatReader::writeRTMat(char *filename, cv::Mat mat, int ID){
@@ -113,11 +113,11 @@ void CalibMatReader::writeRTMat(char *filename, cv::Mat mat, int ID){
 				fscanf(tfp, "%f ", &temparr.element[j]);
 			}
 			fscanf(tfp, "\n");
+			matVec.push_back(temparr);
 		}
-	}
-	matVec.push_back(temparr);
 
-	fclose(tfp);
+		fclose(tfp);
+	}
 
 	//rewrite - 넣고 순서대로 정렬 (덮어쓰기)
 	int idx = -1;
@@ -126,6 +126,7 @@ void CalibMatReader::writeRTMat(char *filename, cv::Mat mat, int ID){
 	for(int i = 0; i < matVec.size(); i++){
 		if(ID == matVec.at(i).ID){
 			matVec.erase(matVec.begin() + i);
+			datacount--;
 			break;
 		}
 	}
@@ -140,7 +141,7 @@ void CalibMatReader::writeRTMat(char *filename, cv::Mat mat, int ID){
 	std::sort(matVec.begin(), matVec.end(), compare);
 
 	tfp = fopen(filename, "w");
-	fprintf(tfp, "%d\n", datacount++);
+	fprintf(tfp, "%d\n", ++datacount);
 	for(int i = 0; i < matVec.size(); i++){
 		fprintf(tfp, "[%d]\n", matVec.at(i).ID);
 		for(int j = 0; j < 16; j++){
