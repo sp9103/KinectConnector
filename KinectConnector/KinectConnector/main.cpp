@@ -10,6 +10,7 @@ int main(){
 	SkeletonInfo tBodystruct;
 	KinectConnector kinect;
 	glBodyRenderer renderer;
+	HRESULT hr;
 
 	//Image allocation
 	Mat KinectRGB, KinectDepth;
@@ -24,10 +25,17 @@ int main(){
 	kinect.KinectInitialize(KinectSource_Color | KinectSource_Depth| KinectSource_Body | KinectSource_Face);
 
 	while(1){
-		kinect.GetColorImage(&KinectRGB);
 		kinect.GetDepthImage(&KinectDepth);
-		kinect.GetSkeletonPos(&tBodystruct, &KinectRGB, 0);
-		kinect.FaceDetection(&tBodystruct, &KinectRGB);
+		hr = kinect.GetColorImage(&KinectRGB);
+		if(SUCCEEDED(hr))
+			hr = kinect.GetSkeletonPos(&tBodystruct, &KinectRGB, 0);
+		else
+			continue;
+
+		if(SUCCEEDED(hr))
+			kinect.FaceDetection(&tBodystruct, &KinectRGB);
+		else
+			continue;
 
 		renderer.SetBodyInfo(&tBodystruct);
 

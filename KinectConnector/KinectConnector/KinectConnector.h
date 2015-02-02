@@ -20,7 +20,7 @@ public:
 
 	//Get Color Opencv Image. (1920*1080)
 	//Image must allocated.(size: 1920*1080, CV_8UC4)
-	void GetColorImage(Mat *src);
+	HRESULT GetColorImage(Mat *src);
 
 	//Get Depth Opencv Image. (512*424)
 	//Image must allocated. (size: 512*424, CV_8UC4)
@@ -30,10 +30,10 @@ public:
 	//and Draw Opencv Image.
 	//if mode = 1, Draw DepthScale. so src = DepthImage
 	//else if mode = 0, Draw ColorScale. so src = ColorImage.
-	void GetSkeletonPos(SkeletonInfo *m_SkeletonInfo, Mat *src, int mode);
+	HRESULT GetSkeletonPos(SkeletonInfo *m_SkeletonInfo, Mat *src, int mode);
 
 	//Get Face Information & draw Face (RGBD Space)
-	void FaceDetection(SkeletonInfo *m_SkeletonInfo, Mat *src);
+	HRESULT FaceDetection(SkeletonInfo *m_SkeletonInfo, Mat *src);
 
 	//Kinect sensor close.
 	void KinectDestroy();
@@ -95,5 +95,8 @@ private:
 	bool bColor;
 	bool bFace;
 	bool bBody;
+
+	//////////////////////////
+	faceinfo histFace[BODY_COUNT];
 };
 
